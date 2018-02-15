@@ -1,7 +1,16 @@
-const db = require('../models');
+const db = require('../models'),
+      jwt = require('jwt-simple'),
+      config = require('../config');
 
 //User REFERS TO THE USER MODEL
 const User = db.User;
+
+//JWT TOKEN CREATION USING THE USER ID AND A GIVEN SECRET
+function tokenForUser(user){
+  const timestamp = new Date().getTime();
+  //JWT STANDARD sub(subject) iat(time)
+  return jwt.encode({ sub:user.id, iat:timestamp}, config.secret);
+}
 
 //SIGNUP ROUTE FUNCTION
 exports.signUp = function(req,res,next){
@@ -23,9 +32,9 @@ exports.signUp = function(req,res,next){
       } else {
         //CREATE NEW USER ENTRY IN THE DATABASE
         User.create(req.body)
-          .then(function(){
+          .then(function(newUser){
             //IF SUCCESSFULL RESPOND WITH A 201
-            res.status(201).json({message:"success"})
+            res.status(201).json({token: tokenForUser(newUser)});
           })
           .catch(function(err){
             //error while creating
