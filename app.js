@@ -5,14 +5,14 @@ const express    = require('express'),
       app        = express();
 
 //ROUTER SETUP
-const router= require('./routes/router');
+const router = require('./routes/router');
 
 //APP SETUP
 app.use(morgan('combined'));
 app.use(bodyParser.json({type:'*/*'}));
 app.use(bodyParser.urlencoded({extended:true}));
-//make app component available to the router
-router(app);
+
+app.use('/',router);
 
 //SERVER SETUP
 const PORT = 3000;
