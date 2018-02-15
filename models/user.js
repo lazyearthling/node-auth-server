@@ -34,6 +34,16 @@ userSchema.pre('save',function(next){
   })
 })
 
+//COMPARE PASSWORD USING BCRYPT
+//ANY FUNCTION ATTACHED TO METHOD WILL BE AVAILABLE TO THE GLOBAL USER MODEL
+userSchema.methods.comparePassword = function(candidatePassword,callback){
+  bcrypt.compare(candidatePassword,this.password,function(err,isMatch){
+    if(err){ return callback(err); }
+
+    callback(null,isMatch);
+  });
+}
+
 //CREATES A USER MODEL
 var UserModel = mongoose.model('User',userSchema);
 

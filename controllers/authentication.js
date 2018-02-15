@@ -5,6 +5,11 @@ const db = require('../models'),
 //User REFERS TO THE USER MODEL
 const User = db.User;
 
+//SIGNIN TOKEN
+exports.signIn = function(req,res,next){
+  res.json({token: tokenForUser(req.user)})
+}
+
 //JWT TOKEN CREATION USING THE USER ID AND A GIVEN SECRET
 function tokenForUser(user){
   const timestamp = new Date().getTime();
